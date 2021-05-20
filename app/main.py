@@ -33,7 +33,7 @@ def receive_docx():
     uploaded_file = request.files['file']
     dfs = read_docx_tables(uploaded_file)
 
-    return jsonify(dfs)
+    return render_template('index.html',  tables=[df.to_html(classes='data', header="true") for df in dfs])
 
 @app.route('/', methods=['POST'])
 def upload_file():
