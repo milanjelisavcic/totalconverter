@@ -36,8 +36,6 @@ def upload_file():
     # return redirect(url_for('index'))
     return render_template('index.html',  tables=[df.to_html(classes='data', header="true") for df in dfs])
 
-
-
 # A welcome message to test our server
 @app.route('/')
 def index():
