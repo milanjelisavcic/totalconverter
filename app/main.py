@@ -5,7 +5,7 @@ from app.util import read_docx_tables
 
 app = Flask(__name__)
 
-@app.route('/getmsg/', methods=['GET'])
+@app.route('/navigator/', methods=['GET'])
 def respond():
     # Retrieve the name from url parameter
     name = request.args.get("name", None)
@@ -28,6 +28,13 @@ def respond():
     # Return the response in json format
     return jsonify(response)
 
+@app.route('/navigator/', methods=['POST'])
+def receive_docx():
+    uploaded_file = request.files['file']
+    dfs = read_docx_tables(uploaded_file)
+
+    return jsonify(dfs)
+
 @app.route('/', methods=['POST'])
 def upload_file():
     uploaded_file = request.files['doc_file']
@@ -36,13 +43,9 @@ def upload_file():
     # return redirect(url_for('index'))
     return render_template('index.html',  tables=[df.to_html(classes='data', header="true") for df in dfs])
 
-# A welcome message to test our server
 @app.route('/')
 def index():
-    """Return the main page."""
-    # stedin_map = get_map()
     return render_template('index.html', **locals())
 
 if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
