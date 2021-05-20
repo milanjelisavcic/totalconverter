@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask import render_template, redirect, url_for
 
-import app.util
+from app.util import read_docx_tables
 
 app = Flask(__name__)
 
@@ -31,9 +31,12 @@ def respond():
 @app.route('/', methods=['POST'])
 def upload_file():
     uploaded_file = request.files['doc_file']
-    if uploaded_file.filename != '':
-        uploaded_file.save(uploaded_file.filename)
-    return redirect(url_for('index'))
+    dfs = read_docx_tables(uploaded_file)
+	
+    # return redirect(url_for('index'))
+    return render_template('index.html',  tables=[df.to_html(classes='data', header="true") for df in dfs])
+
+
 
 # A welcome message to test our server
 @app.route('/')
