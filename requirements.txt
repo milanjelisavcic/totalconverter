@@ -20,16 +20,7 @@ ipython_genutils==0.2.0
 itsdangerous==2.0.0
 jedi==0.17.0
 jinja2==3.0.0
-jsonschema==3.2.0=py_2
-jupyter_client==6.1.12
-jupyter_core==4.7.1
-jupyterlab_pygments==0.1.2=py_0
 libsodium==1.0.18
-m2w64-gcc-libgfortran==5.3.0==6
-m2w64-gcc-libs==5.3.0==7
-m2w64-gcc-libs-core==5.3.0==7
-m2w64-gmp==6.1.0==2
-m2w64-libwinpthread-git==5.0.0.4634.697f757==2
 markupsafe==2.0.0
 mistune==0.8.4
 mkl==2021.2.0
