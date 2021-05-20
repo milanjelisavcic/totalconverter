@@ -33,7 +33,8 @@ def receive_docx():
     uploaded_file = request.files['file']
     dfs = read_docx_tables(uploaded_file)
 
-    return render_template('index.html',  tables=[df.to_html(classes='data', header="true") for df in dfs])
+    response = [df.to_json() for df in dfs]
+    return jsonify(response)
 
 @app.route('/', methods=['POST'])
 def upload_file():
@@ -41,7 +42,8 @@ def upload_file():
     dfs = read_docx_tables(uploaded_file)
 	
     # return redirect(url_for('index'))
-    return render_template('index.html',  tables=[df.to_html(classes='data', header="true") for df in dfs])
+    response = [df.to_html(classes='data', header="true") for df in dfs]
+    return render_template('index.html',  tables=response)
 
 @app.route('/')
 def index():
