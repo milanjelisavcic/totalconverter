@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask import render_template, redirect, url_for
 
+import app.util
+
 app = Flask(__name__)
 
 @app.route('/getmsg/', methods=['GET'])
