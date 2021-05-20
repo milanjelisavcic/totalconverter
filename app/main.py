@@ -30,7 +30,7 @@ def respond():
 
 @app.route('/navigator/', methods=['POST'])
 def receive_docx():
-    uploaded_file = request.files['file']
+    uploaded_file = request.files['doc_file']
     dfs = read_docx_tables(uploaded_file)
 
     response = [df.to_json() for df in dfs]
