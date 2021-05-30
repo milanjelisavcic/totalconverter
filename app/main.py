@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify
 from flask import render_template, redirect, url_for
 from flask_cors import CORS
 
-from app.util import read_docx_tables
+import pandas as pd
+
+from app.util import read_docx_tables, unify_dfs
 
 app = Flask(__name__)
 CORS(app)
@@ -42,9 +44,10 @@ def receive_docx():
 def upload_file():
     uploaded_file = request.files['doc_file']
     dfs = read_docx_tables(uploaded_file)
-	
-    # return redirect(url_for('index'))
-    response = [df.to_html(classes='data', header="true") for df in dfs]
+    dfs = unify_dfs(dfs)
+    
+    response = pd.concat(dfs, sort=False)
+    response = [response.to_html(classes='data', header="true")]
     return render_template('index.html',  tables=response)
 
 @app.route('/')

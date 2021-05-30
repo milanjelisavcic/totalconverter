@@ -34,3 +34,22 @@ def read_docx_tables(filename, tab_id=None, **kwargs):
         except IndexError:
             print('Error: specified [tab_id]: {}  does not exist.'.format(tab_id))
             raise
+
+def unify_dfs(dfs):
+    dfs = [df for df in dfs if df.shape != (0, 1)]
+
+    for idx, df in enumerate(dfs):
+        precondition = True if df.columns[0].startswith('PRE-CONDITION') else False
+        columns = list(df.iloc[0,]) if not precondition else list(df.iloc[1,])
+        connection_type = df.columns[0] if not precondition else df.iloc[0,0]
+
+        df.columns = columns
+        df.insert(0, "CONNECTION TYPE", connection_type)
+        df.drop(df.head(1).index if not precondition else df.head(2).index, inplace=True)
+
+    for idx, df in enumerate(dfs):
+        id_vars = [c for c in df.columns if not c.endswith('SCENARIO')]
+        dfs[idx] = df.melt(id_vars=id_vars)
+        dfs[idx].rename(columns={'value': 'OUTCOME', 'variable': 'SCENARIO'}, inplace=True)
+
+    return dfs
