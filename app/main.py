@@ -36,9 +36,12 @@ def respond():
 def receive_docx():
     uploaded_file = request.files['doc_file']
     dfs = read_docx_tables(uploaded_file)
-
-    response = [df.to_json() for df in dfs]
-    return jsonify(response)
+    dfs = unify_dfs(dfs)
+    
+    response = pd.concat(dfs, sort=False)
+    response.reset_index(drop=True, inplace=True)
+    # response = [response.to_html(classes='data', header="true")]
+    return (response.to_json())
 
 @app.route('/', methods=['POST'])
 def upload_file():
