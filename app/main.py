@@ -32,16 +32,21 @@ def respond():
     # Return the response in json format
     return jsonify(response)
 
-@app.route('/navigator/', methods=['POST'])
+@app.route('/navigator/', methods=['POST', 'GET'])
+@app.route('/temis/', methods=['POST', 'GET'])
 def receive_docx():
+    format = request.form.get('format', False)
     uploaded_file = request.files['doc_file']
     dfs = read_docx_tables(uploaded_file)
-    dfs = unify_dfs(dfs)
-    
-    response = pd.concat(dfs, sort=False)
-    response.reset_index(drop=True, inplace=True)
-    # response = [response.to_html(classes='data', header="true")]
-    return (response.to_json())
+
+    if format:
+        dfs = unify_dfs(dfs)
+        response = pd.concat(dfs, sort=False)
+        response.reset_index(drop=True, inplace=True)
+    else:
+        response = [df.to_html(classes='data', header="true") for df in dfs]
+
+    return (response.to_json(orient=format)) if format else jsonify(response)
 
 @app.route('/', methods=['POST'])
 def upload_file():
