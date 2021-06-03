@@ -11,6 +11,10 @@ Temis AI engine helps with the automated digitization of cross-border manuals an
 
 + Parameters
 
+    + doc_file (object, required)
+
+        The DOC(X) file that is parsed for tables
+
     + format (string, optional)
     
         The merged table return JSON format
@@ -23,7 +27,7 @@ Temis AI engine helps with the automated digitization of cross-border manuals an
             + `values`
             + `table`
 
-+ Response 200 (text/html; charset=utf-8)
++ Response 200 (application/json; charset=utf-8)
     + Headers
 
             content-length: 7
