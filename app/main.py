@@ -1,5 +1,7 @@
-from flask import Flask, request, jsonify
-from flask import render_template, redirect, url_for
+from flask import Flask
+from flask import jsonify
+from flask import render_template
+from flask import request
 from flask_cors import CORS
 
 import pandas as pd
@@ -9,32 +11,10 @@ from app.util import read_docx_tables, unify_dfs
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/navigator/', methods=['GET'])
-def respond():
-    # Retrieve the name from url parameter
-    name = request.args.get("name", None)
-
-    # For debugging
-    print(f"got name {name}")
-
-    response = {}
-
-    # Check if user sent a name at all
-    if not name:
-        response["ERROR"] = "no name found, please send a name."
-    # Check if the user entered a number not a name
-    elif str(name).isdigit():
-        response["ERROR"] = "name can't be numeric."
-    # Now the user entered a valid name
-    else:
-        response["MESSAGE"] = f"Welcome {name} to our awesome platform!!"
-
-    # Return the response in json format
-    return jsonify(response)
 
 @app.route('/navigator/', methods=['POST', 'GET'])
 @app.route('/temis/', methods=['POST', 'GET'])
-def receive_docx():
+def parse_docx():
     format = request.form.get('format', False)
     uploaded_file = request.files['doc_file']
     dfs = read_docx_tables(uploaded_file)
