@@ -3,77 +3,49 @@ HOST: https://polls.apiblueprint.org/
 
 # Temis AI
 
-Temis AI is a simple B2B API that helps with the automated digitization
-of cross-border manuals supports you with counsel management.
+Temis AI engine helps with the automated digitization of cross-border manuals and supports you with counsel management.
 
-## Import DOCX [/navigator]
+## Import DOCX [/temis]
 
-### Extract DOCX tables [GET]
+### Extract tables from DOCX [POST]
 
-+ Response 200 (application/json)
++ Parameters
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+    + format (string, optional)
+    
+        The merged table return JSON format
 
-### Import DOCX file [POST]
+        + Members
+            + `split`
+            + `record`
+            + `index`
+            + `columns`
+            + `values`
+            + `table`
 
-You may import DOCX file with specifi tables.
-
-+ Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
++ Response 200 (text/html; charset=utf-8)
     + Headers
 
-            Location: /questions/2
-
+            content-length: 7
+            access-control-allow-origin: *
+    
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "schema": {
+                    "fields": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "CONNECTION TYPE",
+                        "type": "string"
+                    },
+                    {
+                        "name": "GROUP ",
+                        "type": "string"
+                    },
+                    ...
+                }
             }
