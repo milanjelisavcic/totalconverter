@@ -4,5 +4,6 @@ flask-cors==3.0.10
 numpy==1.20.2
 pandas==1.2.4
 gunicorn==20.1.0
-heroku==0.1.4
+heroku
 python-docx
+flask_mysqldb=0.2.0
