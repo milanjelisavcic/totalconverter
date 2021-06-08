@@ -11,10 +11,14 @@ from app.util import read_docx_tables, unify_dfs
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/tree/')
+def analyse_document():
+    return render_template('tree.html', **locals())
+
 
 @app.route('/navigator/', methods=['POST', 'GET'])
 @app.route('/temis/', methods=['POST', 'GET'])
-def parse_docx():
+def parse_document():
     format = request.form.get('format', False)
     uploaded_file = request.files['doc_file']
     dfs = read_docx_tables(uploaded_file)
@@ -28,19 +32,17 @@ def parse_docx():
 
     return (response.to_json(orient=format)) if format else jsonify(response)
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    uploaded_file = request.files['doc_file']
-    dfs = read_docx_tables(uploaded_file)
-    dfs = unify_dfs(dfs)
-    
-    response = pd.concat(dfs, sort=False)
-    response = [response.to_html(classes='data', header="true")]
+    if request.method == 'POST':
+        uploaded_file = request.files['doc_file']
+        dfs = read_docx_tables(uploaded_file)
+        dfs = unify_dfs(dfs)
+        
+        response = pd.concat(dfs, sort=False)
+        response = [response.to_html(classes='data', header="true")]
     return render_template('index.html',  tables=response)
 
-@app.route('/')
-def index():
-    return render_template('index.html', **locals())
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
