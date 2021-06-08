@@ -7,6 +7,7 @@ from flask_cors import CORS
 import pandas as pd
 
 from app.util import read_docx_tables, unify_dfs
+from app.utils.table_processor import TableProcessor, docx_to_csv
 
 app = Flask(__name__)
 CORS(app)
@@ -21,19 +22,24 @@ def analyse_document():
 def parse_document():
     format = request.form.get('format', False)
     uploaded_file = request.files['doc_file']
-    dfs = read_docx_tables(uploaded_file)
+    output_csv = 'res/data/output.csv'
+    docx_to_csv(uploaded_file, output_csv)
+    # dfs = read_docx_tables(uploaded_file)
+    tp = TableProcessor(output_csv)
+    response, _, _ = tp.process_tables()
 
-    if format:
-        dfs = unify_dfs(dfs)
-        response = pd.concat(dfs, sort=False)
-        response.reset_index(drop=True, inplace=True)
-    else:
-        response = [df.to_html(classes='data', header="true") for df in dfs]
+    # if format:
+    #     dfs = unify_dfs(dfs)
+    #     response = pd.concat(dfs, sort=False)
+    #     response.reset_index(drop=True, inplace=True)
+    # else:
+    #     response = [df.to_html(classes='data', header="true") for df in dfs]
 
     return (response.to_json(orient=format)) if format else jsonify(response)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+    response = ''
     if request.method == 'POST':
         uploaded_file = request.files['doc_file']
         dfs = read_docx_tables(uploaded_file)
