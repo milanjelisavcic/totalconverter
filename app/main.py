@@ -22,7 +22,7 @@ def analyse_document():
 def parse_document():
     format = request.form.get('format', False)
     uploaded_file = request.files['doc_file']
-    output_csv = 'res/data/output.csv'
+    output_csv = 'res/output.csv'
     docx_to_csv(uploaded_file, output_csv)
     # dfs = read_docx_tables(uploaded_file)
     tp = TableProcessor(output_csv)
