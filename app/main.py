@@ -22,18 +22,17 @@ def analyse_document():
 def parse_document():
     format = request.form.get('format', False)
     uploaded_file = request.files['doc_file']
-    output_csv = 'res/output.csv'
-    docx_to_csv(uploaded_file, output_csv)
-    # dfs = read_docx_tables(uploaded_file)
-    tp = TableProcessor(output_csv)
-    response, _, _ = tp.process_tables()
 
-    # if format:
-    #     dfs = unify_dfs(dfs)
-    #     response = pd.concat(dfs, sort=False)
-    #     response.reset_index(drop=True, inplace=True)
-    # else:
-    #     response = [df.to_html(classes='data', header="true") for df in dfs]
+    if format:
+        output_csv = 'res/output.csv'
+
+        docx_to_csv(uploaded_file, output_csv)
+        tp = TableProcessor(output_csv)
+
+        response, _, _ = tp.process_tables()
+    else:
+        dfs = read_docx_tables(uploaded_file)
+        response = [df.to_html(classes='data', header="true") for df in dfs]
 
     return (response.to_json(orient=format)) if format else jsonify(response)
 
