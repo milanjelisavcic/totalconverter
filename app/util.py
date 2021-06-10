@@ -2,6 +2,7 @@ import pandas as pd
 import io
 import csv
 from docx import Document
+from collections import Counter
 
 def read_docx_tables(filename, tab_id=None, **kwargs):
     """
@@ -34,6 +35,14 @@ def read_docx_tables(filename, tab_id=None, **kwargs):
         except IndexError:
             print('Error: specified [tab_id]: {}  does not exist.'.format(tab_id))
             raise
+
+def count_words_fast(text):     
+    text = text.lower() 
+    skips = [".", ", ", ":", ";", "'", '"'] 
+    for ch in skips: 
+        text = text.replace(ch, "") 
+    word_counts = Counter(text.split(" ")) 
+    return word_counts
 
 def unify_dfs(dfs):
     dfs = [df for df in dfs if df.shape != (0, 1)]
