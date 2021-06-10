@@ -4,7 +4,9 @@ from flask import render_template
 from flask import request
 from flask_cors import CORS
 
+from docx import Document
 import pandas as pd
+import mammoth
 
 from app.util import read_docx_tables, unify_dfs
 from app.utils.table_processor import TableProcessor, docx_to_csv
@@ -38,15 +40,25 @@ def parse_document():
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    response = ''
+    style_map = """
+        p[style-name='Section Title'] => h1:fresh
+        p[style-name='Subsection Title'] => h2:fresh
+    """
+    response = 'No tables in the file'
+    preview = ''
     if request.method == 'POST':
         uploaded_file = request.files['doc_file']
-        dfs = read_docx_tables(uploaded_file)
-        dfs = unify_dfs(dfs)
-        
-        response = pd.concat(dfs, sort=False)
-        response = [response.to_html(classes='data', header="true")]
-    return render_template('index.html',  tables=response)
+
+        preview = mammoth.convert_to_html(uploaded_file, style_map=style_map)
+        preview = preview.value
+
+        if Document(uploaded_file).tables:
+            dfs = read_docx_tables(uploaded_file)
+            dfs = unify_dfs(dfs)
+            
+            response = pd.concat(dfs, sort=False)
+            response = [response.to_html(classes='data', header="true")]
+    return render_template('index.html',  preview=preview, tables=response)
 
 
 if __name__ == '__main__':
