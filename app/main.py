@@ -14,10 +14,6 @@ from app.utils.table_processor import TableProcessor, docx_to_csv
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/tree/')
-def analyse_document():
-    return render_template('tree.html', **locals())
-
 
 @app.route('/navigator/', methods=['POST', 'GET'])
 @app.route('/temis/', methods=['POST', 'GET'])
@@ -38,8 +34,12 @@ def parse_document():
 
     return (response.to_json(orient=format)) if format else jsonify(response)
 
+@app.route('/tree/')
+def tree():
+    return render_template('tree.html', **locals())
+
 @app.route('/', methods=['GET', 'POST'])
-def upload_file():
+def index():
     style_map = """
         p[style-name='Section Title'] => h1:fresh
         p[style-name='Subsection Title'] => h2:fresh
