@@ -4,6 +4,7 @@ from flask import render_template
 from flask import request
 from flask_cors import CORS
 
+import camelot
 from docx import Document
 import pandas as pd
 import mammoth
@@ -14,6 +15,17 @@ from app.utils.table_processor import TableProcessor, docx_to_csv
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/rule_grinder/', methods=['POST', 'GET'])
+def parse_pdf():
+    uploaded_file = request.files['file']
+    format = request.form.get('format', 'table')
+
+    uploaded_file.save(r'res/metadata.pdf')
+    
+    file = camelot.read_pdf(r'res/metadata.pdf')
+    response = file[0].df
+
+    return response.to_json(orient=format)
 
 @app.route('/navigator/', methods=['POST', 'GET'])
 @app.route('/temis/', methods=['POST', 'GET'])
