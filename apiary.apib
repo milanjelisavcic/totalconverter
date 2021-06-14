@@ -5,7 +5,7 @@ HOST: https://bankstack.herokuapp.com
 
 Temis AI engine helps with the automated digitization of cross-border manuals and supports you with counsel management.
 
-## Import DOCX [/temis]
+## Import DOCX [/temis/]
 
 ### Extract tables from DOCX [POST]
 
@@ -14,6 +14,55 @@ Temis AI engine helps with the automated digitization of cross-border manuals an
     + doc_file (object, required)
 
         The DOC(X) file that is parsed for tables
+
+    + format (string, optional)
+    
+        The merged table return JSON format
+
+        + Members
+            + `split`
+            + `record`
+            + `index`
+            + `columns`
+            + `values`
+            + `table`
+
++ Response 200 (application/json; charset=utf-8)
+    + Headers
+
+            content-length: 7
+            access-control-allow-origin: *
+    
+    + Body
+
+            {
+                "schema": {
+                    "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "CONNECTION TYPE",
+                        "type": "string"
+                    },
+                    {
+                        "name": "GROUP ",
+                        "type": "string"
+                    },
+                    ...
+                }
+            }
+
+## Parse PDFs [/rule_grinder/]
+
+### Extract tables from DOCX [POST]
+
++ Parameters
+
+    + file (object, required)
+
+        The PDF file that is parsed for tables
 
     + format (string, optional)
     
